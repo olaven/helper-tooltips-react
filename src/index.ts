@@ -1,3 +1,2 @@
-import MyComponent from './components/Component'
 
-export { MyComponent }
+export { TooltipHelp, TooltipHelpProvider } from "./components/TooltipHelp"
