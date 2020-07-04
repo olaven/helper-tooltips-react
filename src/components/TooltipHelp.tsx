@@ -39,9 +39,9 @@ export const TooltipHelpProvider = ({ children, predicate }: ProviderArguments) 
   const HelpButton = (props: any) => predicate() ? <div {...props}>
     {visible ?
       <button
-        onClick={modifyVisibility(false)} /> :
+        onClick={modifyVisibility(false)} >Understood</button> :
       <button
-        onClick={modifyVisibility(true)} />
+        onClick={modifyVisibility(true)} >Help</button>
     }
   </div> : null
 
