@@ -1,7 +1,3 @@
-/*
-* @jest-environment jsdom
-*/
-
 import React from "react";
 import { render, fireEvent } from "@testing-library/react"
 import '@testing-library/jest-dom/extend-expect'
@@ -63,4 +59,20 @@ test('Tooltip does show if users presses help button', () => {
 
     expect(queryByText(tooltipContent)).toBeInTheDocument();
     expect(queryByText(understoodButtonText)).toBeInTheDocument();
-})
+});
+
+test('Tooltips may be hidden after being shown', () => {
+
+    const { getByText, queryByText } = launch(<TestComponent />);
+
+    fireEvent.click(getByText(helpButtonText));
+
+    expect(queryByText(helpButtonText)).not.toBeInTheDocument();
+    expect(getByText(understoodButtonText)).toBeInTheDocument();
+    expect(getByText(tooltipContent)).toBeInTheDocument();
+
+    fireEvent.click(getByText(understoodButtonText));
+    expect(getByText(helpButtonText)).toBeInTheDocument();
+    expect(queryByText(understoodButtonText)).not.toBeInTheDocument();
+    expect(queryByText(tooltipContent)).not.toBeInTheDocument();
+});
