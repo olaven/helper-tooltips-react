@@ -12,7 +12,12 @@ interface TooltipHelp {
    */
   Tooltip: ({ content, children }) => ReactElement | null
 }
-type ProviderArguments = { children: any, predicate: () => boolean }
+type ProviderArguments = {
+  children: any,
+  predicate: () => boolean,
+  renderButton: (visible: boolean) => ReactElement,
+  renderTooltip: (visible: boolean, children, content) => ReactElement
+}
 
 
 
@@ -20,30 +25,16 @@ type ProviderArguments = { children: any, predicate: () => boolean }
 
 export const TooltipHelp = createContext<TooltipHelp>({ HelpButton: () => null, Tooltip: () => null });
 
-export const TooltipHelpProvider = ({ children, predicate }: ProviderArguments) => {
+export const TooltipHelpProvider = ({ children, predicate, renderTooltip, renderButton }: ProviderArguments) => {
 
   const [visible, setVisible] = useState(false)
 
-  const Tooltip = ({ content, children }) => <div>
-    {content}
-    {children}
-  </div>
-
-
-  //NOTE: questionable gain by turning this into an HOF instead of just passing it as props.. I should reconsider this.
-  const modifyVisibility = (visible: boolean) =>
-    () => {
-      setVisible(visible)
-    }
-
-  const HelpButton = (props: any) => predicate() ? <div {...props}>
-    {visible ?
-      <button
-        onClick={modifyVisibility(false)} >Understood</button> :
-      <button
-        onClick={modifyVisibility(true)} >Help</button>
-    }
-  </div> : null
+  const Tooltip = ({ children, content }) => renderTooltip(visible, children, content)
+  const HelpButton = () => predicate() ?
+    <div onClick={() => setVisible(!visible)}>
+      {renderButton(visible)}
+    </div> :
+    null
 
 
   return <TooltipHelp.Provider value={{ HelpButton, Tooltip }}>
