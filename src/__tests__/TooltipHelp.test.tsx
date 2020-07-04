@@ -1,6 +1,9 @@
-import * as React from 'react'
-import { render } from '@testing-library/react'
-import { fireEvent, waitFor } from '@testing-library/dom'
+/*
+* @jest-environment jsdom
+*/
+
+import React from "react";
+import { render, fireEvent } from "@testing-library/react"
 import '@testing-library/jest-dom/extend-expect'
 import { TooltipHelpProvider, TooltipHelp } from '../index'
 import Tippy from "@tippyjs/react"
@@ -35,32 +38,29 @@ const TestComponent = () => {
 
 test('Renders', async () => {
 
-    const { getByText } = launch(<TestComponent />)
-    expect(getByText(helpButtonText)).toBeInTheDocument();
+    const { queryByText } = launch(<TestComponent />)
+    expect(queryByText(helpButtonText)).toBeInTheDocument();
 });
 
 test('Does not render if predicate is false', () => {
 
-    const { getByText } = launch(<TestComponent />, () => false);
-    expect(getByText(helpButtonText)).not.toBeInTheDocument();
+    const { queryByText } = launch(<TestComponent />, () => false);
+    expect(queryByText(helpButtonText)).toBeNull()
 });
 
 test('Tooltip does not show tooltip as default', () => {
 
-    const { getByText } = launch(<TestComponent />);
-    expect(getByText(tooltipContent)).not.toBeInTheDocument();
+    const { queryByText } = launch(<TestComponent />);
+    expect(queryByText(tooltipContent)).not.toBeInTheDocument();
 });
 
 test('Tooltip does show if users presses help button', () => {
 
-    const { getByText } = launch(<TestComponent />);
+    const { queryByText, getByText } = launch(<TestComponent />);
 
-    expect(getByText(tooltipContent)).not.toBeInTheDocument();
+    expect(queryByText(tooltipContent)).not.toBeInTheDocument();
     fireEvent.click(getByText(helpButtonText));
 
-    waitFor(() => {
-
-        expect(getByText(tooltipContent)).toBeInTheDocument();
-        expect(getByText(understoodButtonText)).toBeInTheDocument();
-    });
+    expect(queryByText(tooltipContent)).toBeInTheDocument();
+    expect(queryByText(understoodButtonText)).toBeInTheDocument();
 })

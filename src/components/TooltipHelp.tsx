@@ -21,8 +21,6 @@ type ProviderArguments = {
 
 
 
-
-
 export const TooltipHelp = createContext<TooltipHelp>({ HelpButton: () => null, Tooltip: () => null });
 
 export const TooltipHelpProvider = ({ children, predicate, renderTooltip, renderButton }: ProviderArguments) => {
